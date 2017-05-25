@@ -1,9 +1,9 @@
 'use strict'
 const Horseman = require('node-horseman')
+var random_ua = require('random-ua');
 
 const defaultOptions = {
 	page: 'https://www.amazon.com/product-reviews/{{asin}}/ref=cm_cr_arp_d_viewopt_srt?reviewerType=all_reviews&pageNumber=1&sortBy=recent',
-	userAgent: 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0',
 	elements: {
 		// Searches whole page
 		productTitle: '.product-title',
@@ -35,12 +35,12 @@ function crawlReview(asin, opt, cb){
 		}
 	}
 
-	const horseman = new Horseman()
+	const horseman = new Horseman({loadImages: false, injectJquery: false})
 	const pageLink = opt.page.replace('{{asin}}', asin)
 
 	// Crawl link
 	horseman
-		.userAgent(opt.userAgent)
+		.userAgent(random_ua.generate())
 		.open(pageLink)
 		.status()
 		.then(status => {
