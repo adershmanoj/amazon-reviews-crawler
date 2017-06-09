@@ -20,22 +20,24 @@ const defaultOptions = {
 	stopAtReviewId: false
 }
 
-function crawlReview(asin, opt, cb){
+function crawlReview(asin, opt, cb) {
 	// Find options
-	if(typeof opt === 'function'){
+	if (typeof opt === 'function') {
 		cb = opt
 		opt = defaultOptions
-	}
-	else if(typeof opt === 'object'){
+	} else if (typeof opt === 'object') {
 		let i
-		for(i in defaultOptions){
-			if(!(i in opt)){
+		for (i in defaultOptions) {
+			if (!(i in opt)) {
 				opt[i] = defaultOptions[i]
 			}
 		}
 	}
 
-	const horseman = new Horseman({loadImages: false, injectJquery: false})
+	const horseman = new Horseman({
+		loadImages: false,
+		injectJquery: false
+	})
 	const pageLink = opt.page.replace('{{asin}}', asin)
 
 	// Crawl link
@@ -44,18 +46,18 @@ function crawlReview(asin, opt, cb){
 		.open(pageLink)
 		.status()
 		.then(status => {
-			if(Number(status) >= 400){
+			if (Number(status) >= 400) {
 				cb(`Page ${pageLink} failed with status: ${status}`)
 			}
 		})
-		.evaluate(function(opt){
+		.evaluate(function(opt) {
 			var reviews = document.querySelectorAll(opt.elements.reviewBlock)
 			var title = document.querySelector(opt.elements.productTitle)
 			title = title ? title.textContent : 'Not found'
 			var arr = []
 
 
-			for(var i = 0; i < reviews.length; i++){
+			for (var i = 0; i < reviews.length; i++) {
 
 				// Get review ID from link
 				var els = {
@@ -66,54 +68,53 @@ function crawlReview(asin, opt, cb){
 					author: reviews[i].querySelector(opt.elements.author),
 					date: reviews[i].querySelector(opt.elements.date)
 				}
-				if(els.link){
+				if (els.link) {
 					var link = els.link.href
 					var id = link.split('/')
 					id = id[id.length - 2]
-				}
-				else{
+				} else {
 					cb('No link/ID found in reviews')
 				}
 
 				// If this is the most recent, stop crawling page
-				if(opt.stopAtReviewId == id){
+				if (opt.stopAtReviewId == id) {
 					break
 				}
 
 				// Trim date
-				if(els.date){
+				var date = undefined;
+				if (els.date) {
 					var date = els.date.textContent.trim()
-					if(date.indexOf('on ') === 0){
-						date = date.replace('on ', '')
+					if (date.indexOf('on ') === 0) {
+						date = new Date(date.replace('on ', ''))
+						if (date == 'Invalid Date') {
+							date = undefined;
+						}
 					}
-				}
-				else{
-					date = 'Not found'
 				}
 
 				// Put each in try statement
 				arr[i] = {
-					id: id,
-					link: link,
-					title: els.title ? els.title.textContent : 'Not found',
-					text: els.text ? els.text.textContent : 'Not found',
-					rating: els.rating,
-					author: els.author ? els.author.textContent : 'Not found',
-					date: date
-				}
-				// Get rating from class
-				if(els.rating){
+						id: id,
+						link: link,
+						title: els.title ? els.title.textContent : 'Not found',
+						text: els.text ? els.text.textContent : 'Not found',
+						rating: els.rating,
+						author: els.author ? els.author.textContent : 'Not found',
+						date: date
+					}
+					// Get rating from class
+				if (els.rating) {
 					var rat = els.rating.classList
 					var found = false
-					for(var ii = rat.length; ii--;){
-						if(rat[ii].indexOf(opt.elements.ratingPattern) == 0){
+					for (var ii = rat.length; ii--;) {
+						if (rat[ii].indexOf(opt.elements.ratingPattern) == 0) {
 							found = rat[ii].replace(opt.elements.ratingPattern, '')
 							found = Number(found)
 						}
 					}
 					arr[i].rating = found
-				}
-				else{
+				} else {
 					arr[i].rating = 'Not found'
 				}
 			}
@@ -135,6 +136,3 @@ function crawlReview(asin, opt, cb){
 
 
 module.exports = crawlReview
-
-
-
