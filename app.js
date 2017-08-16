@@ -21,7 +21,7 @@ const defaultOptions = {
 
 module.exports = (asin, opt) => {
 	return new Promise((resolve, reject) => {
-		opt = Object.assign(defaultOptions, opt)
+		opt = Object.assign({}, defaultOptions, opt)
 		new Nightmare()
 			.useragent(opt.userAgent || randomUa.generate())
 			.goto(opt.page.replace('{{asin}}', asin))
