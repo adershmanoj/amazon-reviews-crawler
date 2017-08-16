@@ -1,6 +1,6 @@
 'use strict'
-const Horseman = require('node-horseman')
-var random_ua = require('random-ua');
+const Nightmare = require('nightmare')
+const randomUa = require('random-ua')
 
 const defaultOptions = {
 	page: 'https://www.amazon.com/product-reviews/{{asin}}/ref=cm_cr_arp_d_viewopt_srt?reviewerType=all_reviews&pageNumber=1&sortBy=recent',
@@ -34,22 +34,17 @@ function crawlReview(asin, opt, cb) {
 		}
 	}
 
-	const horseman = new Horseman({
+	const nightmare = new Nightmare({
+		show: true,
 		loadImages: false,
 		injectJquery: false
 	})
 	const pageLink = opt.page.replace('{{asin}}', asin)
 
 	// Crawl link
-	horseman
-		.userAgent(random_ua.generate())
-		.open(pageLink)
-		.status()
-		.then(status => {
-			if (Number(status) >= 400) {
-				cb(`Page ${pageLink} failed with status: ${status}`)
-			}
-		})
+	nightmare
+		.useragent(randomUa.generate())
+		.goto(pageLink)
 		.evaluate(function(opt) {
 			var reviews = document.querySelectorAll(opt.elements.reviewBlock)
 			var title = document.querySelector(opt.elements.productTitle)
@@ -124,6 +119,7 @@ function crawlReview(asin, opt, cb) {
 				reviews: arr
 			}
 		}, opt)
+		.end(obj => obj)
 		.then(content => {
 			// Callback with review content
 			cb(false, content)
@@ -131,7 +127,6 @@ function crawlReview(asin, opt, cb) {
 		.catch(err => {
 			cb(err)
 		})
-		.close()
 }
 
 
