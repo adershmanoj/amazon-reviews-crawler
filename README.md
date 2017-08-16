@@ -6,32 +6,41 @@ Crawls product reviews from Amazon.
 
 Via [npm](https://www.npmjs.com/):
 
-```
+```bash
 npm install amazon-reviews-crawler
+```
+
+Or [Yarn](https://yarnpkg.com/):
+
+```bash
+yarn add amazon-reviews-crawler
 ```
 
 ## Usage
 
 ### Load the module
 
-```
+```javascript
 var reviewsCrawler = require('amazon-reviews-crawler')
 ```
 
 ### Get reviews by a product ASIN
 
-```
-reviewsCrawler('0062472100', function(err, reviews){
-	if(err) throw err
-	console.log(reviews)
-})
+```javascript
+reviewsCrawler('0062472100')
+	.then(function(results){
+		console.log(results)
+	})
+	.catch(function(err){
+		console.error(err)
+	})
 ```
 
 This will return an object containing the title of the product and an array of review data.
 
 Example of a return:
 
-```
+```javascript
 {
 	title: "Product Name",
 	reviews: [
@@ -54,28 +63,29 @@ Options can also be provided to change the user agent string, review page, or el
 
 Example:
 
-```
+```javascript
 reviewsCrawler('0062472100', {
-	page: 'https://www.amazon.com/product-reviews/{{asin}}',
-	userAgent: 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0',
-	elements: {
-	
-		// Searches whole page
-		productTitle: '.product-title',
-		reviewBlock: '.review',
-		
-		// Searches within elements.reviewBlock
-		link: 'a',
-		title: '.review-title',
-		rating: '.review-rating',
-		ratingPattern: 'a-star-',
-		text: '.review-text',
-		author: '.review-byline a',
-		date: '.review-date'
-	},
-	
-	// Stops crawling when it hits a particular review ID
-	// Useful for only crawling new reviews
-	stopAtReviewId: false
-}
+		page: 'https://www.amazon.com/product-reviews/{{asin}}',
+		userAgent: 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0',
+		elements: {
+			// Searches whole page
+			productTitle: '.product-title',
+			reviewBlock: '.review',
+
+			// Searches within elements.reviewBlock
+			link: 'a',
+			title: '.review-title',
+			rating: '.review-rating',
+			ratingPattern: 'a-star-',
+			text: '.review-text',
+			author: '.review-byline a',
+			date: '.review-date'
+		},
+
+		// Stops crawling when it hits a particular review ID
+		// Useful for only crawling new reviews
+		stopAtReviewId: false
+	})
+	.then(console.log)
+	.catch(console.error)
 ```
