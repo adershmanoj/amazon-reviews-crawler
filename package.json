@@ -1,6 +1,6 @@
 {
   "name": "amazon-reviews-crawler",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Crawls product reviews from Amazon.",
   "main": "app.js",
   "scripts": {
