@@ -13,6 +13,14 @@ ajv@^4.9.1:
     co "^4.6.0"
     json-stable-stringify "^1.0.1"
 
+amazon-reviews-crawler-eval@escaladesports/amazon-reviews-crawler-eval#0.1.1:
+  version "0.1.1"
+  resolved "https://codeload.github.com/escaladesports/amazon-reviews-crawler-eval/tar.gz/e160572cee82747b3e58fe9863ed1b079ebaf3ee"
+
+amazon-reviews-crawler-eval@escaladesports/amazon-reviews-crawler-eval#0.1.2:
+  version "0.1.2"
+  resolved "https://codeload.github.com/escaladesports/amazon-reviews-crawler-eval/tar.gz/ca07db38e06929f8bef1e2c895fe589389258cbd"
+
 ansi-regex@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"
