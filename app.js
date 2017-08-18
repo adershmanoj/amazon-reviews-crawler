@@ -4,19 +4,6 @@ const randomUa = require('random-ua')
 const evalFunction = require('amazon-reviews-crawler-eval')
 const defaultOptions = {
 	page: 'https://www.amazon.com/product-reviews/{{asin}}/ref=cm_cr_arp_d_viewopt_srt?reviewerType=all_reviews&pageNumber=1&sortBy=recent',
-	elements: {
-		// Searches whole page
-		productTitle: '.product-title',
-		reviewBlock: '.review',
-		// Searches within elements.reviewBlock
-		link: 'a',
-		title: '.review-title',
-		rating: '.review-rating',
-		ratingPattern: 'a-star-',
-		text: '.review-text',
-		author: '.review-byline a',
-		date: '.review-date'
-	},
 	stopAtReviewId: false
 }
 
