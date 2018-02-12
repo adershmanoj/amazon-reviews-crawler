@@ -6,7 +6,7 @@ const randomUa = require('random-ua')
 const evalFunction = require('amazon-reviews-crawler-eval')
 
 const defaultOptions = {
-	page: 'https://www.amazon.com/product-reviews/{{asin}}/ref=cm_cr_arp_d_viewopt_srt?reviewerType=all_reviews&pageNumber={{pageNumber}}&sortBy=recent',
+	page: 'https://{{asin}}/ref=cm_cr_arp_d_viewopt_srt?reviewerType=all_reviews&pageNumber={{pageNumber}}&sortBy=recent',
 	stopAtReviewId: false
 }
 
